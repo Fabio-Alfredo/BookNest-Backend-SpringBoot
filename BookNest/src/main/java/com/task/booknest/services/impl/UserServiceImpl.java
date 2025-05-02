@@ -12,6 +12,7 @@ import com.task.booknest.services.contract.UserService;
 import com.task.booknest.utils.JWTTools;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -125,5 +126,15 @@ public class UserServiceImpl implements UserService {
                 tokenRepository.save(token);
             }
         });
+    }
+
+    @Override
+    public User findUserAuthenticated() {
+        String email = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+
+        return userRepository.findByEmail(email);
     }
 }
