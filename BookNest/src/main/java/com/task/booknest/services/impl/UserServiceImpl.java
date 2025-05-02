@@ -6,6 +6,7 @@ import com.task.booknest.domains.models.Token;
 import com.task.booknest.domains.models.User;
 import com.task.booknest.respositories.TokenRepository;
 import com.task.booknest.respositories.UserRepository;
+import com.task.booknest.services.contract.RoleService;
 import com.task.booknest.services.contract.UserService;
 import com.task.booknest.utils.JWTTools;
 import org.modelmapper.ModelMapper;
@@ -21,13 +22,15 @@ public class UserServiceImpl implements UserService {
     private final TokenRepository tokenRepository;
     private final JWTTools jwtTools;
     private final ModelMapper modelMapper;
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, TokenRepository tokenRepository, JWTTools jwtTools, ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, TokenRepository tokenRepository, JWTTools jwtTools, ModelMapper modelMapper, RoleService roleService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
         this.jwtTools = jwtTools;
         this.modelMapper = modelMapper;
+        this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
     }
 
