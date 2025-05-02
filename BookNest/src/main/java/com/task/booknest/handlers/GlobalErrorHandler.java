@@ -1,6 +1,7 @@
 package com.task.booknest.handlers;
 
 import com.task.booknest.domains.dtos.GeneralResponse;
+import com.task.booknest.exceptions.HttpError;
 import com.task.booknest.utils.ErrorTools;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,4 +58,11 @@ public class GlobalErrorHandler {
     public ResponseEntity<GeneralResponse> internalErrorHandler(InternalError ex) {
         return GeneralResponse.getResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
+
+    //General errors
+    @ExceptionHandler(HttpError.class)
+    public ResponseEntity<GeneralResponse> handleHttpError(HttpError ex) {
+        return GeneralResponse.getResponse(ex.getHttpStatus(), ex.getMessage());
+    }
+
 }

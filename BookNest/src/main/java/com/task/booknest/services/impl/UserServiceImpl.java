@@ -50,16 +50,26 @@ public class UserServiceImpl implements UserService {
             newUser.setRoles(List.of(roleService.findById("USER")));
             userRepository.save(newUser);
 
-        }catch (HttpError e){
-            HttpStatus status = e.getHttpStatus() != null ? e.getHttpStatus() : HttpStatus.BAD_REQUEST;
-            String message = e.getMessage() != null ? e.getMessage() : "Error while role";
-            throw new HttpError(status, message);
+        }
+        catch (HttpError e){
+            throw e;
         }
     }
 
     @Override
     public Token loginUser(LoginDto auth) {
-        return null;
+        try{
+            User user = userRepository.findByEmail(auth.getEmail());
+            if(user == null || !passwordEncoder.matches(auth.getPassword(), user.getPassword()) )
+                throw  new HttpError(HttpStatus.FORBIDDEN, "Invalid credentials");
+
+            Token token = registerToken(user);
+            return token;
+        }catch (HttpError e){
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -72,20 +82,20 @@ public class UserServiceImpl implements UserService {
 
             return user;
         }catch (HttpError e){
-            HttpStatus status = e.getHttpStatus() != null ? e.getHttpStatus() : HttpStatus.BAD_REQUEST;
-            String message = e.getMessage() != null ? e.getMessage() : "Error while role";
-            throw new HttpError(status, message);
+            throw e;
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
         }
     }
 
     //Method for auth user
     @Override
     public Token registerToken(User user) throws Exception {
-        cleanToken(user);
+            cleanToken(user);
 
-        String stringToken = jwtTools.generateToken(user);
-        Token token = new Token(user, stringToken);
-        return tokenRepository.save(token);
+            String stringToken = jwtTools.generateToken(user);
+            Token token = new Token(user, stringToken);
+            return tokenRepository.save(token);
     }
 
     @Override

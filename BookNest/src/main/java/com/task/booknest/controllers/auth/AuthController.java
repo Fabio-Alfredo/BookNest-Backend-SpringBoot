@@ -1,7 +1,10 @@
 package com.task.booknest.controllers.auth;
 
 import com.task.booknest.domains.dtos.GeneralResponse;
+import com.task.booknest.domains.dtos.auth.LoginDto;
 import com.task.booknest.domains.dtos.auth.RegisterUserDto;
+import com.task.booknest.domains.dtos.auth.TokenDto;
+import com.task.booknest.domains.models.Token;
 import com.task.booknest.exceptions.HttpError;
 import com.task.booknest.services.contract.UserService;
 import jakarta.validation.Valid;
@@ -22,14 +25,22 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<GeneralResponse> registerUsers(@RequestBody @Valid RegisterUserDto data){
+    public ResponseEntity<GeneralResponse> registerUser(@RequestBody @Valid RegisterUserDto data){
         try{
             userService.registerUser(data);
             return GeneralResponse.getResponse(HttpStatus.ACCEPTED, "User register");
+        }catch (HttpError e) {
+            return GeneralResponse.getResponse(e.getHttpStatus(), e.getMessage());
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<GeneralResponse>loginUser(@RequestBody @Valid LoginDto auth){
+        try{
+            Token token = userService.loginUser(auth);
+            return GeneralResponse.getResponse(HttpStatus.OK, "Login success", new TokenDto(token) );
         }catch (HttpError e){
-            return  GeneralResponse.getResponse(e.getHttpStatus(), e.getMessage());
-        }catch (Exception e){
-            return GeneralResponse.getResponse(HttpStatus.BAD_REQUEST, "Error while fetching role: " +e.getMessage());
+            return GeneralResponse.getResponse(e.getHttpStatus(), e.getMessage());
         }
     }
 }
