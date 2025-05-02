@@ -30,8 +30,7 @@ public class BootController {
     public ResponseEntity<GeneralResponse> createBoot(@ModelAttribute CreateBookDto bookDto){
         try {
             String image = cloudinaryService.uploadImage(bookDto.getFile(), "books");
-            bookDto.setCoverImage(image);
-            Book book =bookService.createBook(bookDto);
+            Book book =bookService.createBook(bookDto, image);
             return GeneralResponse.getResponse(HttpStatus.CREATED, "Create book success", book);
         }catch (HttpError e){
             return GeneralResponse.getResponse(e.getHttpStatus(), e.getMessage());
