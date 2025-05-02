@@ -27,8 +27,7 @@ public class User implements UserDetails {
     @JsonIgnore
     List<Token>tokens;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER)
     List<Role>roles;
 
     @Override

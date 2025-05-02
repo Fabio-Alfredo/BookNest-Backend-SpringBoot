@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Entity
 @Data
 @Table(name="roles")
@@ -14,7 +16,7 @@ public class Role {
     private String value;
     private String description;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "roles")
     @JsonIgnore
-    private User user;
+    private List<User> user;
 }
