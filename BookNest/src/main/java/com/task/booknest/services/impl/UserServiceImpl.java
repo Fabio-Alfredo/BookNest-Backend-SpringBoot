@@ -4,12 +4,14 @@ import com.task.booknest.domains.dtos.auth.LoginDto;
 import com.task.booknest.domains.dtos.auth.RegisterUserDto;
 import com.task.booknest.domains.models.Token;
 import com.task.booknest.domains.models.User;
+import com.task.booknest.exceptions.HttpError;
 import com.task.booknest.respositories.TokenRepository;
 import com.task.booknest.respositories.UserRepository;
 import com.task.booknest.services.contract.RoleService;
 import com.task.booknest.services.contract.UserService;
 import com.task.booknest.utils.JWTTools;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,15 +43,17 @@ public class UserServiceImpl implements UserService {
 
             User existUser = userRepository.findByEmail(user.getEmail());
             if(existUser!=null){
-                throw  new RuntimeException("User already exists");
+                throw  new HttpError(HttpStatus.CONFLICT,"User already exists");
             }
 
             User newUser = modelMapper.map(user, User.class);
             newUser.setRoles(List.of(roleService.findById("USER")));
             userRepository.save(newUser);
 
-        }catch (Exception e){
-            throw  new RuntimeException("Error while create user: "+ e.getMessage());
+        }catch (HttpError e){
+            HttpStatus status = e.getHttpStatus() != null ? e.getHttpStatus() : HttpStatus.BAD_REQUEST;
+            String message = e.getMessage() != null ? e.getMessage() : "Error while role";
+            throw new HttpError(status, message);
         }
     }
 
@@ -64,11 +68,13 @@ public class UserServiceImpl implements UserService {
             User user = userRepository.findByEmail(email);
 
             if(user == null)
-                throw new RuntimeException("User not found");
+                throw new HttpError(HttpStatus.NOT_FOUND, "User not found");
 
             return user;
-        }catch (Exception e){
-            throw  new RuntimeException("Error while fetching user: "+e.getMessage());
+        }catch (HttpError e){
+            HttpStatus status = e.getHttpStatus() != null ? e.getHttpStatus() : HttpStatus.BAD_REQUEST;
+            String message = e.getMessage() != null ? e.getMessage() : "Error while role";
+            throw new HttpError(status, message);
         }
     }
 
