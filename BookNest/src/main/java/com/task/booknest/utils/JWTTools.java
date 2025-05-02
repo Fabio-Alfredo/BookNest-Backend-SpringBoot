@@ -42,7 +42,7 @@ public class JWTTools {
             return  false;
         }
     }
-
+    
     public String getUserByEmailFrom(String token){
         try{
             JwtParser parse = Jwts.parser()
@@ -51,7 +51,6 @@ public class JWTTools {
             return parse.parseSignedClaims(token)
                     .getPayload()
                     .getSubject();
-            
         }catch (Exception e){
             return null;
         }
