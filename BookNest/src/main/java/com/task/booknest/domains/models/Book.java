@@ -3,6 +3,7 @@ package com.task.booknest.domains.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -21,7 +22,7 @@ public class Book {
     private String coverImage;
 
     @ManyToMany(mappedBy = "books")
-    private List<Author> authors;
+    private List<Author> authors = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Genre genre;
