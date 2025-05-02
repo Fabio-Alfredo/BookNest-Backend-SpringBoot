@@ -1,10 +1,12 @@
 package com.task.booknest.services.impl;
 
 import com.task.booknest.domains.dtos.book.CreateBookDto;
+import com.task.booknest.domains.models.Author;
 import com.task.booknest.domains.models.Book;
 import com.task.booknest.exceptions.HttpError;
 import com.task.booknest.respositories.BookRepository;
 import com.task.booknest.respositories.GenreRepository;
+import com.task.booknest.services.contract.AuthorService;
 import com.task.booknest.services.contract.BookService;
 import com.task.booknest.services.contract.GenreService;
 import org.modelmapper.ModelMapper;
@@ -20,11 +22,13 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final ModelMapper modelMapper;
     private final GenreService genreService;
+    private final AuthorService authorService;
 
-    public BookServiceImpl(BookRepository bookRepository, ModelMapper modelMapper, GenreService genreService) {
+    public BookServiceImpl(BookRepository bookRepository, ModelMapper modelMapper, GenreService genreService, AuthorService authorService) {
         this.bookRepository = bookRepository;
         this.modelMapper = modelMapper;
         this.genreService = genreService;
+        this.authorService = authorService;
     }
 
     @Override
@@ -35,9 +39,9 @@ public class BookServiceImpl implements BookService {
                throw new HttpError(HttpStatus.CONFLICT,"Book already exists");
            }
 
-
            Book newBook = modelMapper.map(bookDto, Book.class);
            newBook.setGenre(genreService.findById(bookDto.getGenreId()));
+           newBook.setAuthors(authorService.findAllAuthorsById(bookDto.getAuthorIds()));
 
            return bookRepository.save(newBook);
        }catch (HttpError e){
