@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface BookService {
-    Book createBook(CreateBookDto bookDto);
+    Book createBook(CreateBookDto bookDto, String photo);
     List<Book>findAllBooks();
     Book findBookById(UUID id);
 }

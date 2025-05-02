@@ -32,7 +32,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book createBook(CreateBookDto bookDto) {
+    public Book createBook(CreateBookDto bookDto, String photo) {
        try{
            Book existBook = bookRepository.findByTitle(bookDto.getTitle());
            if(existBook != null){
@@ -40,6 +40,7 @@ public class BookServiceImpl implements BookService {
            }
 
            Book newBook = modelMapper.map(bookDto, Book.class);
+           newBook.setCoverImage(photo);
            newBook.setGenre(genreService.findById(bookDto.getGenreId()));
            newBook.setAuthors(authorService.findAllAuthorsById(bookDto.getAuthorIds()));
 
