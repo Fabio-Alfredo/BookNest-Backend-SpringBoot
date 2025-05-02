@@ -3,6 +3,7 @@ package com.task.booknest.domains.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
@@ -17,6 +18,7 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String name;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String biography;
     private Date birthDate;
     private String photo;
