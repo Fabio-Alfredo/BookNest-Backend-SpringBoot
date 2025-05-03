@@ -23,7 +23,12 @@ public class Book {
     private Date publicationYear;
     private String coverImage;
 
-    @ManyToMany(mappedBy = "books")
+    //La tabla va en el lado propetario quien ara las relaciones
+    @ManyToMany
+    @JoinTable(name="book_author",
+            joinColumns = @JoinColumn(name = "book_ir"),
+            inverseJoinColumns = @JoinColumn(name="author_id")
+    )
     private List<Author> authors;
 
     @ManyToOne(fetch = FetchType.EAGER)

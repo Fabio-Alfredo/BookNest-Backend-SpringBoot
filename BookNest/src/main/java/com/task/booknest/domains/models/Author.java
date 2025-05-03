@@ -23,7 +23,7 @@ public class Author {
     private Date birthDate;
     private String photo;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "authors", fetch = FetchType.EAGER)
     @JsonIgnore
     private List<Book>books;
 }
