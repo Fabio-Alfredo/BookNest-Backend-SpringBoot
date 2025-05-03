@@ -68,4 +68,22 @@ public class BookServiceImpl implements BookService {
             throw e;
         }
     }
+
+    @Override
+    public void deleteOneBook(UUID id) {
+        try{
+            Book book = bookRepository.findById(id).orElse(null);
+            if(book == null)
+                throw new HttpError(HttpStatus.NOT_FOUND, "Invalid book");
+
+            for(Author author: book.getAuthors()){
+                author.getBooks().remove(book);
+            }
+
+            book.getAuthors().clear();
+            bookRepository.delete(book);
+        }catch (HttpError e) {
+            throw  e;
+        }
+    }
 }

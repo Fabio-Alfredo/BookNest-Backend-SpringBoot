@@ -56,4 +56,14 @@ public class BootController {
             return GeneralResponse.getResponse(e.getHttpStatus(), e.getMessage());
         }
     }
+
+    @DeleteMapping("/delete/{bookId}")
+    public ResponseEntity<GeneralResponse>deleteOneBook(@PathVariable UUID bookId){
+        try {
+            bookService.deleteOneBook(bookId);
+            return GeneralResponse.getResponse(HttpStatus.OK, "Book deleted");
+        }catch (HttpError e){
+            return GeneralResponse.getResponse(e.getHttpStatus(), e.getMessage());
+        }
+    }
 }

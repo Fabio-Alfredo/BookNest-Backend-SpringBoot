@@ -10,4 +10,5 @@ public interface BookService {
     Book createBook(CreateBookDto bookDto, String photo);
     List<Book>findAllBooks();
     Book findBookById(UUID id);
+    void deleteOneBook(UUID id);
 }
